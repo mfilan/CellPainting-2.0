@@ -1,0 +1,4 @@
+defaults:
+  - dataset: cell_painting
+  - train: base
+  - _self_
