@@ -1,0 +1,72 @@
+_target_: src.conf.DataConfig
+dataset_path: ${hydra.runtime.cwd}/../data/raw
+batch_size: 4
+split_method: STRATIFIED_SPLIT
+compound_mapping:
+  1: Berberine Chloride
+  2: Brefeldin A
+  3: Fluphenazine
+  4: Latrunculin B
+  5: Nocodazole
+  6: Rapamycin
+  7: Rotenone
+  8: Tetrandrine
+  9: Berberine Chloride
+  10: Brefeldin A
+  11: Fluphenazine
+  12: Latrunculin B
+  13: Nocodazole
+  14: Rapamycin
+  15: Rotenone
+  16: Tetrandrine
+concentration_mapping:
+  1 : 50
+  2 : 25
+  3 : 12.5
+  4 : 6.25
+  5 : 3.166666667
+  6 : 1.583333333
+  7 : 0.75
+  8 : 0.416666667
+  9 : 0.166666667
+  10 : 0.083333333
+  11 : 0.041666667
+  12 : 50
+  13 : 25
+  14 : 12.5
+  15 : 6.25
+  16 : 3.166666667
+  17 : 1.583333333
+  18 : 0.75
+  19 : 0.416666667
+  20 : 0.166666667
+  21 : 0.083333333
+  22 : 0.041666667
+  23 : 0
+  24 : 0
+label2id:
+  Berberine Chloride : 0
+  Brefeldin A : 1
+  DFSO : 2
+  Fluphenazine : 3
+  Latrunculin B : 4
+  Nocodazole : 5
+  Rapamycin : 6
+  Rotenone : 7
+  Tetrandrine : 8
+metadata_output_columns : ['folder_name', 'file_name1', 'file_name2',
+                           'file_name3', 'file_name4','well_id', 'compound_id',
+                           'concentration_id', 'compound_name', 'concentration']
+transforms:
+  _target_: torchvision.transforms.Compose
+  transforms:
+    _target_: src.utils.to_list
+    to_tensor:
+      _target_: torchvision.transforms.ToTensor
+    normalize:
+      _target_: torchvision.transforms.Normalize
+      mean: [163.24,  536.39, 425.26, 581.64]
+      std: [ 204.27, 1386.95, 917.2 , 519.7 ]
+    resize:
+      _target_: torchvision.transforms.Resize
+      size: 224

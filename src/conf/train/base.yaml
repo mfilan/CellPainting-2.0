@@ -1,0 +1,27 @@
+_target_: src.conf.TrainConfig
+model:
+  _target_: src.model.Dummy
+criterion:
+  _target_: torch.nn.CrossEntropyLoss
+optimizer:
+  _partial_: true
+  _target_: torch.optim.AdamW
+optimizer_params:
+  lr: 5e-5
+device:
+  _target_: torch.device
+  device: cpu
+epochs: 1
+use_wandb: False
+project_name: CellPainting
+save_model_name: model.pth
+id2label:
+  0 : Berberine Chloride
+  1 : Brefeldin A
+  2 : DFSO
+  3 : Fluphenazine
+  4 : Latrunculin
+  5 : Nocodazole
+  6 : Rapamycin
+  7 : Rotenone
+  8 : Tetrandrine
