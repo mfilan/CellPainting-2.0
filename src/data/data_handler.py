@@ -1,9 +1,16 @@
-from typing import Dict
+import multiprocessing as mp
+import os
+from pathlib import Path
+from typing import Any, Dict
 
+import pandas as pd
 import torch
+from pandas.testing import assert_frame_equal
+from tifffile import imwrite
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 
+from src import utils
 from src.conf import DataConfig
 from src.data.dataset import CellPaintingDataset
 from src.data.metadata_extractor import MetadataExtractor
@@ -40,3 +47,73 @@ class DataHandler:
         dataset = self.dataset(dataset_df, self.config, self.config.transforms)
         data_loaders = self.create_data_loaders(dataset, samplers)
         return data_loaders
+
+    @staticmethod
+    def create_directories(dataset_df: pd.DataFrame) -> None:
+        subset_folders = dataset_df.subset.unique()
+        cached_dataset_path = dataset_df.cached_dataset_path.values[0]
+        for subset_folder in subset_folders:
+            path = os.path.join(cached_dataset_path, subset_folder)
+            Path(path).mkdir(parents=True, exist_ok=True)
+
+    @staticmethod
+    def save_merged_image(image_info: Dict[str, Any]) -> None:
+        image = utils.read_all_channels(image_info, image_info["dataset_path"])
+        new_image_file_name = image_info["folder_name"] + "_" + image_info["file_name"]
+        save_path = os.path.join(image_info["cached_dataset_path"], image_info["subset"], new_image_file_name)
+        imwrite(save_path, image)
+
+    def prepare_dataset_to_cache(self) -> pd.DataFrame:
+        dataset_df = self.metadata_extractor.get_data_frame()
+        dataset_df["file_name"] = dataset_df["file_name1"].str.replace("ch1", "")
+        dataset_df["dataset_path"] = self.config.dataset_path
+        dataset_df["cached_dataset_path"] = self.config.cached_dataset_path
+        indices = self.split_strategy.split_dataset_indices(dataset_df)
+        dataset_df.loc[indices["train_indices"], "subset"] = "train"
+        dataset_df.loc[indices["test_indices"], "subset"] = "test"
+        dataset_df.loc[indices["val_indices"], "subset"] = "val"
+        self.create_directories(dataset_df)
+        return dataset_df
+
+    @staticmethod
+    def dataset_exists(new_dataset_df: pd.DataFrame, dataset_path: str) -> bool:
+        if Path(dataset_path).is_file():
+            existing_dataset_df = pd.read_csv(dataset_path)
+            try:
+                assert_frame_equal(
+                    existing_dataset_df,
+                    new_dataset_df,
+                    check_dtype=False,
+                    check_column_type=False,
+                    check_frame_type=False,
+                )
+                return True
+            except AssertionError:
+                return False
+        return False
+
+    @staticmethod
+    def save_dataset_data_frame(dataset_df: pd.DataFrame, dataset_df_save_path: str) -> None:
+        dataset_df = dataset_df[
+            ["folder_name", "file_name", "compound_id", "concentration_id", "compound_name", "concentration", "subset"]
+        ].copy()
+        new_file_name = dataset_df["folder_name"] + "_" + dataset_df["file_name"]
+        dataset_df.loc[:, "file_name"] = new_file_name
+        dataset_df.drop(columns="folder_name", inplace=True)
+        dataset_df = dataset_df.rename(columns={"subset": "folder_name"})
+        dataset_df.to_csv(dataset_df_save_path, index=False)
+
+    def cache_dataset(self) -> None:
+        dataset_df = self.prepare_dataset_to_cache()
+        dataset_df_save_path = os.path.join(self.config.cached_dataset_path, "meta_data.csv")
+
+        if self.dataset_exists(dataset_df, dataset_df_save_path):
+            print("Using cached dataset!")
+            return None
+
+        dataset_dict = dataset_df.to_dict(orient="index")
+        images_info = list(dataset_dict.values())
+        with mp.Pool() as pool:
+            pool.map(self.save_merged_image, images_info)
+        self.save_dataset_data_frame(dataset_df, dataset_df_save_path)
+        return None

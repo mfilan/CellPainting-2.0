@@ -24,12 +24,12 @@ class SplitStrategy(ABC):
         return {"dataset_indices": dataset_indices, "labels": labels, "groups": groups}
 
     @abstractmethod
-    def _split_dataset_indices(self, dataset_df: pd.DataFrame) -> Dict[str, npt.NDArray[np.int64]]:
+    def split_dataset_indices(self, dataset_df: pd.DataFrame) -> Dict[str, npt.NDArray[np.int64]]:
         ...
 
     def get_subset_sampler(self, dataset_df: pd.DataFrame) -> Dict[str, SubsetRandomSampler]:
         samplers = {}
-        for subset_name, subset_indices in self._split_dataset_indices(dataset_df).items():
+        for subset_name, subset_indices in self.split_dataset_indices(dataset_df).items():
             samplers[subset_name.replace("indices", "sampler")] = torch.utils.data.SubsetRandomSampler(
                 subset_indices, generator=self.generator
             )
@@ -37,7 +37,7 @@ class SplitStrategy(ABC):
 
 
 class LeaveOneCartridgeStratifiedSplit(SplitStrategy):
-    def _split_dataset_indices(self, dataset_df: pd.DataFrame) -> Dict[str, npt.NDArray[np.int64]]:
+    def split_dataset_indices(self, dataset_df: pd.DataFrame) -> Dict[str, npt.NDArray[np.int64]]:
         cartridges_names = list(dataset_df.folder_name.unique())
         test_cartridge = cartridges_names.pop(np.random.randint(0, len(cartridges_names)))
         test_cartridge_mask = dataset_df.folder_name.str.match(test_cartridge)
@@ -53,7 +53,7 @@ class LeaveOneCartridgeStratifiedSplit(SplitStrategy):
 
 
 class StratifiedSplit(SplitStrategy):
-    def _split_dataset_indices(self, dataset_df: pd.DataFrame) -> Dict[str, npt.NDArray[np.int64]]:
+    def split_dataset_indices(self, dataset_df: pd.DataFrame) -> Dict[str, npt.NDArray[np.int64]]:
         dataset_indices, labels, groups = list(self.get_split_params(dataset_df, self.label2id).values())
         (train_indices, test_indices) = next(self.splitter.split(X=dataset_indices, y=labels, groups=groups))
         train_indices = dataset_indices.flatten()[train_indices]

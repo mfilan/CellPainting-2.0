@@ -1,6 +1,13 @@
 from .data_handler import DataHandler
-from .dataset import CellPaintingDataset
+from .dataset import CellPaintingDataset, CellPaintingDatasetCached
 from .metadata_extractor import MetadataExtractor
 from .split import SPLIT_METHODS, SplitMethod
 
-__all__ = ["CellPaintingDataset", "SPLIT_METHODS", "SplitMethod", "DataHandler", "MetadataExtractor"]
+__all__ = [
+    "CellPaintingDataset",
+    "SPLIT_METHODS",
+    "SplitMethod",
+    "DataHandler",
+    "MetadataExtractor",
+    "CellPaintingDatasetCached",
+]

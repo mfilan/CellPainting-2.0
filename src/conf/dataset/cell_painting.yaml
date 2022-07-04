@@ -1,5 +1,6 @@
 _target_: src.conf.DataConfig
 dataset_path: ${hydra.runtime.cwd}/../data/raw
+cached_dataset_path: ${hydra.runtime.cwd}/../data/processed
 batch_size: 4
 split_method: STRATIFIED_SPLIT
 compound_mapping:

@@ -17,4 +17,5 @@ __all__ = [
     "Dummy",
     "to_list",
     "to_numpy",
+    "ViT",
 ]

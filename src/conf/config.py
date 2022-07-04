@@ -16,6 +16,7 @@ class DataConfig:
     batch_size: int
     split_method: SplitMethod
     dataset_path: str
+    cached_dataset_path: str
     compound_mapping: Dict[int, str]
     concentration_mapping: Dict[int, float]
     label2id: Dict[str, int]
