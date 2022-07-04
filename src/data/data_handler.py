@@ -94,9 +94,21 @@ class DataHandler:
 
     @staticmethod
     def save_dataset_data_frame(dataset_df: pd.DataFrame, dataset_df_save_path: str) -> None:
-        dataset_df = dataset_df[
-            ["folder_name", "file_name", "compound_id", "concentration_id", "compound_name", "concentration", "subset"]
-        ].copy()
+        dataset_df = (
+            dataset_df[
+                [
+                    "folder_name",
+                    "file_name",
+                    "compound_id",
+                    "concentration_id",
+                    "compound_name",
+                    "concentration",
+                    "subset",
+                ]
+            ]
+            .copy()
+            .drop_duplicates()
+        )
         new_file_name = dataset_df["folder_name"] + "_" + dataset_df["file_name"]
         dataset_df.loc[:, "file_name"] = new_file_name
         dataset_df.drop(columns="folder_name", inplace=True)
