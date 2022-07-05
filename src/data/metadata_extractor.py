@@ -32,6 +32,7 @@ class MetadataExtractor:
         metadata_df = self.group_channels(metadata_df)
         metadata_df = metadata_df[self.config.metadata_output_columns]
         metadata_df["well_id"] = LabelEncoder().fit_transform(metadata_df["well_id"])
+        metadata_df.loc[metadata_df["concentration"] == 0, "compound_name"] = "DFSO"
         return metadata_df
 
     @staticmethod
