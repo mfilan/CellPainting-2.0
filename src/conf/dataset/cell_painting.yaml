@@ -72,9 +72,9 @@ train_transforms:
       _target_: torchvision.transforms.Resize
       size: 224
     vertical_filp:
-      _target_:  torchvision.transforms..RandomVerticalFlip
+      _target_:  torchvision.transforms.RandomVerticalFlip
     horizontal_flip:
-      _target_:  torchvision.transforms..RandomHorizontalFlip
+      _target_:  torchvision.transforms.RandomHorizontalFlip
 test_transforms:
   _target_: torchvision.transforms.Compose
   transforms:
