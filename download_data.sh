@@ -37,5 +37,5 @@ done
 
 # Unpack them
 for f in "${names[@]}"; do
-    unzip -q "$f"
+    unzip "$f"
 done
