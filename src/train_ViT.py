@@ -29,13 +29,13 @@ import pandas as pd
 
 metadata = pd.read_csv("../data/processed/meta_data.csv")
 train_dataset = CellPaintingDatasetCached(
-    metadata[metadata.folder_name == "train"], dataset_config, dataset_config.transforms
+    metadata[metadata.folder_name == "train"], dataset_config, dataset_config.train_transforms
 )
 test_dataset = CellPaintingDatasetCached(
-    metadata[metadata.folder_name == "test"], dataset_config, dataset_config.transforms
+    metadata[metadata.folder_name == "test"], dataset_config, dataset_config.test_transforms
 )
 val_dataset = CellPaintingDatasetCached(
-    metadata[metadata.folder_name == "val"], dataset_config, dataset_config.transforms
+    metadata[metadata.folder_name == "val"], dataset_config, dataset_config.test_transforms
 )
 
 import numpy as np

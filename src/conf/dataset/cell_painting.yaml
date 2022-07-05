@@ -58,7 +58,24 @@ label2id:
 metadata_output_columns : ['folder_name', 'file_name1', 'file_name2',
                            'file_name3', 'file_name4','well_id', 'compound_id',
                            'concentration_id', 'compound_name', 'concentration']
-transforms:
+train_transforms:
+  _target_: torchvision.transforms.Compose
+  transforms:
+    _target_: src.utils.to_list
+    to_tensor:
+      _target_: torchvision.transforms.ToTensor
+    normalize:
+      _target_: torchvision.transforms.Normalize
+      mean: [163.24,  536.39, 425.26, 581.64]
+      std: [ 204.27, 1386.95, 917.2 , 519.7 ]
+    resize:
+      _target_: torchvision.transforms.Resize
+      size: 224
+    vertical_filp:
+      _target_:  torchvision.transforms..RandomVerticalFlip
+    horizontal_flip:
+      _target_:  torchvision.transforms..RandomHorizontalFlip
+test_transforms:
   _target_: torchvision.transforms.Compose
   transforms:
     _target_: src.utils.to_list
