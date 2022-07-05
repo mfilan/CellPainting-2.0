@@ -12,7 +12,7 @@ from torch.utils.data.sampler import SubsetRandomSampler
 
 class SplitStrategy(ABC):
     def __init__(self, label2id: Dict[str, int]) -> None:
-        self.splitter = StratifiedGroupKFold(n_splits=4, random_state=0, shuffle=True)
+        self.splitter = StratifiedGroupKFold(n_splits=8, random_state=0, shuffle=True)
         self.label2id = label2id
         self.generator = torch.Generator(device="cpu").manual_seed(0)
 
