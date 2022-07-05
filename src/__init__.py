@@ -18,4 +18,5 @@ __all__ = [
     "to_list",
     "to_numpy",
     "ViT",
+    "DeiT",
 ]
