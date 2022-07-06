@@ -111,12 +111,12 @@ class ViT(nn.Module):
 
 
 class DeiT(nn.Module):
-    def __init__(self, num_classes: int = 9) -> None:
+    def __init__(self, model, num_classes: int = 9) -> None:
         super().__init__()
         self.weight = torch.tensor([1.44, 0.32, 1.44, 1.24, 1.44, 1.33, 1.44, 1.44, 1.17], device=torch.device("cuda"))
         self.num_classes = num_classes
-        self.model = DeiTForImageClassification.from_pretrained("facebook/deit-base-distilled-patch16-224")
-        self.model.classifier = nn.Linear(self.model.classifier.in_features, num_classes)
+        self.model = model  # DeiTForImageClassification.from_pretrained("facebook/deit-base-distilled-patch16-224")
+        # self.model.classifier = nn.Linear(self.model.classifier.in_features, num_classes)
         layer = self.model.deit.embeddings.patch_embeddings.projection
         new_in_channels = 4
         new_layer = nn.Conv2d(

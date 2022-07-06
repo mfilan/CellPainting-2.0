@@ -12,6 +12,16 @@ label2id:
   Rapamycin : 6
   Rotenone : 7
   Tetrandrine : 8
+id2label:
+  0 : Berberine Chloride
+  1 : Brefeldin A
+  2 : DFSO
+  3 : Fluphenazine
+  4 : Latrunculin B
+  5 : Nocodazole
+  6 : Rapamycin
+  7 : Rotenone
+  8 : Tetrandrine
 train_transforms:
   _target_: torchvision.transforms.Compose
   transforms:
