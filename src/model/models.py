@@ -67,6 +67,7 @@ class ResNet(nn.Module):
 class ViT(nn.Module):
     def __init__(self, num_classes: int = 9) -> None:
         super().__init__()
+        self.weight = torch.tensor([1.44, 0.32, 1.44, 1.24, 1.44, 1.33, 1.44, 1.44, 1.17], device=torch.device("cuda"))
         self.num_classes = num_classes
         self.model = ViTForImageClassification.from_pretrained("google/vit-base-patch16-224-in21k")
         self.model.classifier = nn.Linear(self.model.classifier.in_features, num_classes)
@@ -99,8 +100,9 @@ class ViT(nn.Module):
         loss = None
 
         if labels is not None:
-
-            loss_fct = nn.CrossEntropyLoss()
+            if self.weight.device != logits.device:
+                self.weight = self.weight.to(logits.device)
+            loss_fct = nn.CrossEntropyLoss(weight=self.weight)
             loss = loss_fct(logits.view(-1, self.num_classes), labels.view(-1))
 
         return ImageClassifierOutput(
@@ -111,6 +113,7 @@ class ViT(nn.Module):
 class DeiT(nn.Module):
     def __init__(self, num_classes: int = 9) -> None:
         super().__init__()
+        self.weight = torch.tensor([1.44, 0.32, 1.44, 1.24, 1.44, 1.33, 1.44, 1.44, 1.17], device=torch.device("cuda"))
         self.num_classes = num_classes
         self.model = DeiTForImageClassification.from_pretrained("facebook/deit-base-distilled-patch16-224")
         self.model.classifier = nn.Linear(self.model.classifier.in_features, num_classes)
@@ -143,8 +146,9 @@ class DeiT(nn.Module):
         loss = None
 
         if labels is not None:
-
-            loss_fct = nn.CrossEntropyLoss()
+            if self.weight.device != logits.device:
+                self.weight = self.weight.to(logits.device)
+            loss_fct = nn.CrossEntropyLoss(weight=self.weight)
             loss = loss_fct(logits.view(-1, self.num_classes), labels.view(-1))
 
         return ImageClassifierOutput(

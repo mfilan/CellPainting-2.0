@@ -1,0 +1,38 @@
+_target_: src.conf.DataConfig
+dataset_path: ${hydra.runtime.cwd}/../data/processed
+batch_size: 4
+split_method: LOC_STRATIFIED_SPLIT
+label2id:
+  Berberine Chloride : 0
+  Brefeldin A : 1
+  DFSO : 2
+  Fluphenazine : 3
+  Latrunculin B : 4
+  Nocodazole : 5
+  Rapamycin : 6
+  Rotenone : 7
+  Tetrandrine : 8
+train_transforms:
+  _target_: torchvision.transforms.Compose
+  transforms:
+    _target_: src.utils.to_list
+    to_tensor:
+      _target_: torchvision.transforms.ToTensor
+    normalize:
+      _target_: torchvision.transforms.Normalize
+      mean: [163.24,  536.39, 425.26, 581.64]
+      std: [ 204.27, 1386.95, 917.2 , 519.7 ]
+    vertical_filp:
+      _target_:  torchvision.transforms.RandomVerticalFlip
+    horizontal_flip:
+      _target_:  torchvision.transforms.RandomHorizontalFlip
+test_transforms:
+  _target_: torchvision.transforms.Compose
+  transforms:
+    _target_: src.utils.to_list
+    to_tensor:
+      _target_: torchvision.transforms.ToTensor
+    normalize:
+      _target_: torchvision.transforms.Normalize
+      mean: [163.24,  536.39, 425.26, 581.64]
+      std: [ 204.27, 1386.95, 917.2 , 519.7 ]
