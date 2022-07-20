@@ -5,11 +5,13 @@ mkdir -p data
 cd data
 
 names=(
-splitted_processed_0_25_50.zip
+#splitted_processed_0_25_50.zip
+splitted_processed_patched.zip
 
 )
 urls=(
-"https://onedrive.live.com/download?cid=389519B65EF435AE&resid=389519B65EF435AE%2126961&authkey=ACoIKEV-MSBQ-us"
+#"https://onedrive.live.com/download?cid=389519B65EF435AE&resid=389519B65EF435AE%2126961&authkey=ACoIKEV-MSBQ-us",
+"https://onedrive.live.com/download?cid=389519B65EF435AE&resid=389519B65EF435AE%2126999&authkey=AFJVhpcfjz9-V8c"
 )
 
 # Download all the files
