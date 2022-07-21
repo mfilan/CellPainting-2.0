@@ -11,7 +11,7 @@ splitted_processed_patched.zip
 )
 urls=(
 #"https://onedrive.live.com/download?cid=389519B65EF435AE&resid=389519B65EF435AE%2126961&authkey=ACoIKEV-MSBQ-us",
-"https://onedrive.live.com/download?cid=389519B65EF435AE&resid=389519B65EF435AE%2126999&authkey=AFJVhpcfjz9-V8c"
+"https://onedrive.live.com/download?cid=389519B65EF435AE&resid=389519B65EF435AE%2127000&authkey=AMNmXIBP_tjMeRo"
 )
 
 # Download all the files
