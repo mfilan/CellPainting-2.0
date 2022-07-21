@@ -27,7 +27,7 @@ class CellPaintingDataset(Dataset):
     def __getitem__(self, idx: int) -> Dict[str, npt.NDArray[np.float32] | int]:
         image_info = self.dataset_df.iloc[idx, :].to_dict()
         label = self.config.label2id[image_info["compound_name"]]
-        image = utils.read_all_channels(image_info, self.config.dataset_path).astype(np.float16)
+        image = utils.read_all_channels(image_info, self.config.dataset_path).astype(np.float32)
         if self.transform:
             image = self.transform(image)
         return {"pixel_values": image, "label": label}
@@ -47,7 +47,7 @@ class CellPaintingDatasetCached(Dataset):
         image_info = self.dataset_df.iloc[idx, :].to_dict()
         label = self.config.label2id[image_info["compound_name"]]
         image = utils.read_image(image_info["file_name"], image_info["folder_name"], self.config.dataset_path).astype(
-            np.float16
+            np.float32
         )
         if self.transform:
             image = self.transform(image)
