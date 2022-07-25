@@ -15,7 +15,7 @@ urls=(
 #"https://onedrive.live.com/download?cid=389519B65EF435AE&resid=389519B65EF435AE%2126961&authkey=ACoIKEV-MSBQ-us",
 #"https://onedrive.live.com/download?cid=389519B65EF435AE&resid=389519B65EF435AE%2127000&authkey=AMNmXIBP_tjMeRo",
 #"https://onedrive.live.com/download?cid=389519B65EF435AE&resid=389519B65EF435AE%2127001&authkey=AJdkPhg7kZpdA_E"
-"https://onedrive.live.com/embed?cid=389519B65EF435AE&resid=389519B65EF435AE%2127003&authkey=AJBYgKoG5IPibHg"
+"https://onedrive.live.com/download?cid=389519B65EF435AE&resid=389519B65EF435AE%2127004&authkey=AHqqKUNF-guwbhE"
 )
 
 # Download all the files
