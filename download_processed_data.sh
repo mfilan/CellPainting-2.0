@@ -8,7 +8,7 @@ names=(
 #splitted_processed_0_25_50.zip,
 #splitted_processed_patched.zip,
 #merged_test_images.zip
-processed_base2.zip
+processed_base.zip
 )
 
 urls=(
