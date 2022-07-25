@@ -1,12 +1,12 @@
 import multiprocessing as mp
 import os
+from itertools import chain
 from pathlib import Path
-from typing import Any, Dict
+from typing import Dict
 
 import pandas as pd
 import torch
 from pandas.testing import assert_frame_equal
-from tifffile import imwrite
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 
@@ -56,13 +56,6 @@ class DataHandler:
             path = os.path.join(cached_dataset_path, subset_folder)
             Path(path).mkdir(parents=True, exist_ok=True)
 
-    @staticmethod
-    def save_merged_image(image_info: Dict[str, Any]) -> None:
-        image = utils.read_all_channels(image_info, image_info["dataset_path"])
-        new_image_file_name = image_info["folder_name"] + "_" + image_info["file_name"]
-        save_path = os.path.join(image_info["cached_dataset_path"], image_info["subset"], new_image_file_name)
-        imwrite(save_path, image)
-
     def prepare_dataset_to_cache(self) -> pd.DataFrame:
         dataset_df = self.metadata_extractor.get_data_frame()
         dataset_df["file_name"] = dataset_df["file_name1"].str.replace("ch1", "")
@@ -94,28 +87,15 @@ class DataHandler:
 
     @staticmethod
     def save_dataset_data_frame(dataset_df: pd.DataFrame, dataset_df_save_path: str) -> None:
-        dataset_df = (
-            dataset_df[
-                [
-                    "folder_name",
-                    "file_name",
-                    "compound_id",
-                    "concentration_id",
-                    "compound_name",
-                    "concentration",
-                    "subset",
-                ]
-            ]
-            .copy()
-            .drop_duplicates()
-        )
+        dataset_df.drop_duplicates(inplace=True)
         new_file_name = dataset_df["folder_name"] + "_" + dataset_df["file_name"]
         dataset_df.loc[:, "file_name"] = new_file_name
         dataset_df.drop(columns="folder_name", inplace=True)
         dataset_df = dataset_df.rename(columns={"subset": "folder_name"})
         dataset_df.to_csv(dataset_df_save_path, index=False)
 
-    def cache_dataset(self) -> None:
+    def cache_dataset(self, save_method_name: utils.SaveMethod = utils.SaveMethod.BASIC) -> None:
+        save_method = utils.SAVE_METHODS[save_method_name]
         dataset_df = self.prepare_dataset_to_cache()
         dataset_df_save_path = os.path.join(self.config.cached_dataset_path, "meta_data.csv")
 
@@ -126,6 +106,7 @@ class DataHandler:
         dataset_dict = dataset_df.to_dict(orient="index")
         images_info = list(dataset_dict.values())
         with mp.Pool() as pool:
-            pool.map(self.save_merged_image, images_info)
-        self.save_dataset_data_frame(dataset_df, dataset_df_save_path)
+            new_meta_data = pool.map(save_method, images_info)
+        new_dataset_df = pd.DataFrame(chain.from_iterable(new_meta_data))
+        self.save_dataset_data_frame(new_dataset_df, dataset_df_save_path)
         return None

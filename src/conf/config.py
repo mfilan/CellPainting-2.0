@@ -16,11 +16,11 @@ class DataConfig:
     batch_size: int
     split_method: Any  # SplitMethod
     dataset_path: str
-    # cached_dataset_path: str
     label2id: Dict[str, int]
     id2label: Dict[int, str]
     train_transforms: Any  # torchvision.transforms.Compose = None
     test_transforms: Any  # torchvision.transforms.Compose = None
+    cached_dataset_path: str = None
     compound_mapping: Dict[int, str] | None = None
     concentration_mapping: Dict[int, float] | None = None
     metadata_output_columns: List[str] | None = None

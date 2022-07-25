@@ -16,7 +16,11 @@ __all__ = [
     "ResNet",
     "Dummy",
     "to_list",
+    "view_as_blocks",
     "to_numpy",
     "ViT",
     "DeiT",
+    "SAVE_METHODS",
+    "SaveMethod",
+    "CellPainingModel",
 ]

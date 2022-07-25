@@ -117,7 +117,7 @@ class DeiT(nn.Module):
         self.num_classes = num_classes
         self.model = model  # DeiTForImageClassification.from_pretrained("facebook/deit-base-distilled-patch16-224")
         # self.model.classifier = nn.Linear(self.model.classifier.in_features, num_classes)
-        layer = self.model.model.deit.embeddings.patch_embeddings.projection
+        layer = self.model.deit.embeddings.patch_embeddings.projection
         new_in_channels = 4
         new_layer = nn.Conv2d(
             in_channels=new_in_channels,
@@ -135,14 +135,14 @@ class DeiT(nn.Module):
                 :, copy_weights : copy_weights + 1, ::
             ].clone()
         new_layer.weight = nn.Parameter(new_layers_weight)
-        self.model.model.deit.embeddings.patch_embeddings.projection = new_layer
+        self.model.deit.embeddings.patch_embeddings.projection = new_layer
 
     def forward(self, pixel_values, labels):
 
-        outputs = self.model.model.deit(pixel_values=pixel_values)
+        outputs = self.model.deit(pixel_values=pixel_values)
         sequence_output = outputs[0]
 
-        logits = self.model.model.classifier(sequence_output[:, 0, :])
+        logits = self.model.classifier(sequence_output[:, 0, :])
         loss = None
 
         if labels is not None:

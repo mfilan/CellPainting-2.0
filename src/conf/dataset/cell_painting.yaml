@@ -2,7 +2,7 @@ _target_: src.conf.DataConfig
 dataset_path: ${hydra.runtime.cwd}/../data/raw
 cached_dataset_path: ${hydra.runtime.cwd}/../data/processed
 batch_size: 4
-split_method: STRATIFIED_SPLIT #LOC_STRATIFIED_SPLIT
+split_method: LOC_STRATIFIED_SPLIT
 compound_mapping:
   1: Berberine Chloride
   2: Brefeldin A
@@ -55,6 +55,16 @@ label2id:
   Rapamycin : 6
   Rotenone : 7
   Tetrandrine : 8
+id2label:
+  0 : Berberine Chloride
+  1 : Brefeldin A
+  2 : DFSO
+  3 : Fluphenazine
+  4 : Latrunculin B
+  5 : Nocodazole
+  6 : Rapamycin
+  7 : Rotenone
+  8 : Tetrandrine
 metadata_output_columns : ['folder_name', 'file_name1', 'file_name2',
                            'file_name3', 'file_name4','well_id', 'compound_id',
                            'concentration_id', 'compound_name', 'concentration']
