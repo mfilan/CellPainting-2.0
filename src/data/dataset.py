@@ -50,5 +50,5 @@ class CellPaintingDatasetCached(Dataset):
             np.float32
         )
         if self.transform:
-            image = self.transform(image)
-        return {"pixel_values": image, "label": label}
+            transformed_image = self.transform(image)
+        return {"pixel_values": transformed_image, "label": label, "original_image": image}
